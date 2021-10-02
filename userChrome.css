@@ -2263,7 +2263,7 @@
 
   #context_reloadTab,
   #context_reloadSelectedTabs {
-    /* --menuitem-image: url("chrome://global/skin/icons/reload.svg"); */
+    --menuitem-image: url("chrome://global/skin/icons/reload.svg");
   }
   #context_toggleMuteTab,
   #context_toggleMuteSelectedTabs {
