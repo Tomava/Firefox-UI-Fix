@@ -2809,7 +2809,7 @@
 
   #toolbar-context-reloadSelectedTab,
   #toolbar-context-reloadSelectedTabs {
-    --menuitem-image: url("chrome://browser/skin/reload.svg");
+    --menuitem-image: url("chrome://global/skin/icons/reload.svg");
   }
   #toolbar-context-bookmarkSelectedTab,
   #toolbar-context-bookmarkSelectedTabs {
@@ -3107,7 +3107,7 @@
     #context_reloadTab,
     #context_reloadSelectedTabs,
     #context-reload {
-      --menuitem-image: url("chrome://browser/skin/reload.svg");
+      --menuitem-image: url("chrome://global/skin/icons/reload.svg");
     }
     #context-stop {
       --menuitem-image: url("chrome://global/skin/icons/close.svg");
