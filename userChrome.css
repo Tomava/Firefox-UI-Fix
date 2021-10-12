@@ -7,7 +7,7 @@
   :root[lwtheme-mozlightdark]:not([lwthemetextcolor="bright"]) {
     --lwt-accent-color: rgb(229, 229, 235) !important; /* Original: rgb(240, 240, 244) */
   }
-  @media not all and ((-moz-os-version: windows-win7) or  (-moz-os-version: windows-win8)) {
+  @media not all and ((-moz-os-version: windows-win7) or (-moz-os-version: windows-win8) or (-moz-gtk-csd-available)) {
     /*  Level 4  */
     :root[lwtheme-mozlightdark]:not([lwthemetextcolor="bright"]) #navigator-toolbox {
       background-color: var(--lwt-accent-color) !important;
@@ -564,8 +564,10 @@
       }
     }
     #unknownContentType {
+      -moz-appearance: none !important; /* For Mac */
       color: var(--in-content-page-color) !important;
       background-color: var(--in-content-page-background) !important;
+      /* border-radius: 0 0 8px 8px !important; */
     }
 
     /*- Button ---------------------------------------------------------------*/
@@ -608,7 +610,7 @@
     button:-moz-focusring,
     xul|menulist:-moz-focusring,
     xul|checkbox:-moz-focusring > .checkbox-check, /* :not([native]) to win specificity over checkbox.css */
-    xul|radio[focused="true"] {
+    xul|radio[focused="true"]:-moz-focusring {
       box-shadow: none !important;
       outline: 2px solid var(--in-content-focus-outline-color) !important;
       outline-offset: 2px !important;
@@ -666,7 +668,7 @@
 
     /*- Radio Button ---------------------------------------------------------*/
     xul|radio {
-      margin-inline-start: 0 !important;
+      /* margin-inline-start: 0 !important; */
       appearance: none !important;
     }
 
@@ -837,7 +839,134 @@
       margin: 3px 6px !important;
     }
 
-    /* Each OS */
+    /*- Menulist -------------------------------------------------------------*/
+    /* From mulist.css */
+    xul|menulist {
+      appearance: none !important;
+      background-color: var(--in-content-button-background, ButtonFace) !important;
+      color: var(--in-content-button-text-color, ButtonText) !important;
+      border-radius: 4px !important;
+      padding-block: 4px !important;
+      padding-inline: 12px 8px !important;
+      margin: 5px 2px 3px !important;
+    }
+
+    xul|menulist[size="medium"] {
+      padding-block: 6px !important;
+      padding-inline: 16px 10px !important;
+    }
+
+    xul|menulist[size="large"] {
+      padding-block: 8px !important;
+      padding-inline: 16px 12px !important;
+    }
+
+    xul|menulist:hover {
+      background-color: var(--button-hover-bgcolor, color-mix(in srgb, currentColor 10%, ButtonFace)) !important;
+    }
+
+    xul|menulist:hover:active {
+      background-color: var(--button-active-bgcolor, color-mix(in srgb, currentColor 20%, ButtonFace)) !important;
+    }
+
+    xul|menulist:-moz-focusring {
+      outline: 2px solid var(--focus-outline-color, -moz-accent-color) !important;
+      outline-offset: var(--focus-outline-offset, 2px) !important;
+    }
+
+    #label-box {
+      -moz-box-align: center !important;
+      -moz-box-pack: center !important;
+      font-weight: 600 !important;
+    }
+
+    dropmarker {
+      display: -moz-box !important;
+      appearance: none !important;
+      width: 12px !important;
+      height: 12px !important;
+    }
+
+    dropmarker::part(icon) {
+      list-style-image: url("chrome://global/skin/icons/arrow-down.svg") !important;
+      -moz-context-properties: fill !important;
+      fill: currentColor !important;
+    }
+
+    #highlightable-label:not([highlightable="true"]),
+    #label[highlightable="true"] {
+      display: none !important;
+    }
+
+    label {
+      margin: 0 3px !important;
+    }
+
+    /* From common.css */
+    xul|menulist > xul|menupopup {
+      appearance: none !important;
+
+      /* Reset native styles on Windows and macOS */
+      border: none !important;
+      background-color: transparent !important;
+
+      --panel-border-color: var(--in-content-box-border-color) !important;
+      --panel-border-radius: 2px !important;
+      --panel-background: var(--in-content-box-background) !important;
+      --panel-color: var(--in-content-text-color) !important;
+      --panel-padding: 0 !important;
+    }
+
+    xul|menulist > xul|menupopup xul|menu,
+    xul|menulist > xul|menupopup xul|menuitem {
+      appearance: none !important;
+      font-size: 1em !important;
+      padding-block: 0.2em !important;
+      padding-inline: 10px 30px !important;
+    }
+
+    xul|menulist > xul|menupopup > xul|menu:not([disabled="true"])[_moz-menuactive="true"],
+    xul|menulist > xul|menupopup > xul|menuitem:not([disabled="true"])[_moz-menuactive="true"] {
+      color: var(--in-content-item-hover-text) !important;
+      background-color: var(--in-content-item-hover) !important;
+    }
+
+    xul|menulist > xul|menupopup > xul|menu:not([disabled="true"])[selected="true"],
+    xul|menulist > xul|menupopup > xul|menuitem:not([disabled="true"])[selected="true"] {
+      color: var(--in-content-item-selected-text) !important;
+      background-color: var(--in-content-item-selected) !important;
+    }
+
+    xul|menulist > xul|menupopup > xul|menu[disabled="true"],
+    xul|menulist > xul|menupopup > xul|menuitem[disabled="true"] {
+      color: #999 !important;
+      /* override the [_moz-menuactive="true"] background color from
+         global/menu.css */
+      background-color: transparent !important;
+    }
+
+    xul|menulist > xul|menupopup xul|menuseparator {
+      appearance: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-top: 1px solid var(--in-content-box-border-color) !important;
+      border-bottom: none !important;
+    }
+
+    xul|menulist::part(dropmarker) {
+      margin-block: 1px !important;
+    }
+
+    /* Override menulist.css */
+    xul|menulist[disabled="true"] {
+      background-color: var(--in-content-button-background) !important;
+    }
+
+    xul|menulist:-moz-focusring > xul|*.menulist-label-box {
+      outline: none !important;
+    }
+
+    /*- Each OS --------------------------------------------------------------*/
     @media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8), (-moz-os-version: windows-win10) {
       xul|checkbox,
       xul|radio {
@@ -988,6 +1117,16 @@
   }
 
   /*= Tab Bar - Reduce Width, Show more tabs =================================*/
+  /* for First Tab Space */
+  :root {
+    --space-left-tabbar: 0px; /* If you want drag space, set to 8px */
+  }
+  :root:not([tabsintitlebar]) #tabbrowser-tabs:not([positionpinnedtabs]),
+  :root:is([sizemode="maximized"], [sizemode="fullscreen"]) #tabbrowser-tabs:not([positionpinnedtabs]) {
+    padding-inline-start: var(--space-left-tabbar) !important;
+  }
+
+  /* Titlebar Space */
   .titlebar-spacer[type="pre-tabs"] {
     width: 30px !important; /* Original: 40px */
   }
@@ -995,6 +1134,7 @@
     width: 25px !important; /* Original: 40px */
   }
 
+  /* Tabbar Buttons */
   :root {
     --newtab-button-minus-width-padding: 2px;
     --newtab-button-width-padding: calc(var(--toolbarbutton-inner-padding) - var(--newtab-button-minus-width-padding));
@@ -3351,6 +3491,37 @@
     --menuitem-image: url("./icons/select-all-on.svg");
   }
 
+  /*= textbox-contextmenu ====================================================*/
+  /* Browser's Searchbar, Libray's Searchbar, Page Info */
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-undo"] {
+    --menuitem-image: url("chrome://global/skin/icons/undo.svg");
+  }
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-redo"] {
+  }
+
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-cut"] {
+    --menuitem-image: url("chrome://browser/skin/edit-cut.svg");
+  }
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-copy"] {
+    --menuitem-image: url("chrome://browser/skin/edit-copy.svg");
+  }
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-paste"] {
+    --menuitem-image: url("chrome://browser/skin/edit-paste.svg");
+  }
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-delete"] {
+    --menuitem-image: url("chrome://global/skin/icons/delete.svg");
+  }
+  .textbox-contextmenu > menuitem[data-l10n-id="text-action-select-all"] {
+    --menuitem-image: url("./icons/select-all-on.svg");
+  }
+
+  /* Only searchbar */
+  menuitem.searchbar-paste-and-search {
+  }
+  menuitem.searchbar-clear-history {
+    --menuitem-image: url("chrome://browser/skin/forget.svg");
+  }
+
   /** Global Menu *************************************************************/
   /*= main-menubar ===========================================================*/
   #file-menu {
@@ -3405,13 +3576,13 @@
     --menuitem-image: url("chrome://browser/skin/save.svg");
   }
   #menu_sendLink {
-    --menuitem-image: url(chrome://browser/skin/mail.svg);
+    --menuitem-image: url("chrome://browser/skin/mail.svg");
   }
 
   #menu_printPreview {
   }
   #menu_print {
-    --menuitem-image: url(chrome://global/skin/icons/print.svg);
+    --menuitem-image: url("chrome://global/skin/icons/print.svg");
   }
 
   #menu_importFromAnotherBrowser {
