@@ -366,7 +366,7 @@
     --card-shadow-hover: var(--card-shadow), 0 0 0 5px var(--card-outline-color);
   }
 
-  @media (-moz-toolbar-prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: dark) {
     :host,
     :root {
       /* Keep these in sync with layout/base/PresShell.cpp, and plaintext.css */
@@ -500,7 +500,7 @@
       --menu-border-color: #cfcfd8;
       --menuitem-hover-background-color: #e0e0e6;
     }
-    @media (-moz-toolbar-prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: dark) {
       :root {
         --menu-border-color: rgba(107, 107, 107, 0.3);
         --menu-color: #fbfbfe;
@@ -558,7 +558,7 @@
   /*= Downloads ==============================================================*/
   @-moz-document url("chrome://mozapps/content/downloads/unknownContentType.xhtml")
   {
-    @media (-moz-toolbar-prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: dark) {
       :root {
         --in-content-page-background: #42414d;
       }
@@ -1072,7 +1072,11 @@
   #downloadsListBox .downloadButton,
   #downloadsListBox .download-state[exists],
   #downloadsListBox .download-state[exists] .downloadDetails,
-  #downloadsHistory {
+  #downloadsHistory,
+  #protections-popup-settings-button,
+  #protections-popup-show-report-button,
+  #identity-popup-clear-sitedata-button,
+  #identity-popup-more-info {
     cursor: pointer !important;
   }
 
@@ -1581,8 +1585,8 @@
 
   /** Selected Tab - Bottom Rounded Corner ************************************/
   #tabbrowser-tabs {
-    --tab-corner-rounding: 4px; /* 10px looks about like chromium - 17px looks close to Australis tabs */
-    --tab-corner-padding: 1px;
+    --tab-corner-rounding: 3px; /* 10px looks about like chromium - 17px looks close to Australis tabs */
+    --tab-corner-padding: 0px;
     --tab-corner-position: calc(var(--tab-corner-padding) - var(--tab-corner-rounding));
   }
 
@@ -1599,13 +1603,18 @@
 
     /* Color */
     fill: var(--toolbar-bgcolor) !important;
-    stroke: var(--tabs-border-color, transparent) !important;
+    stroke: var(--tab-line-color, var(--tabs-border-color, rgba(128, 128, 142, 0.9))) !important;
     -moz-context-properties: fill, stroke !important;
 
     /* Image */
     background-size: var(--tab-corner-rounding);
     background-repeat: no-repeat;
     background-position-y: bottom;
+  }
+  :root:not([customizing="true"]) #TabsToolbar[brighttext] tab[visuallyselected] > stack::before,
+  :root:not([customizing="true"]) #TabsToolbar[brighttext] tab[visuallyselected] > stack::after {
+    /* As Selected Tab - Box Shadow */
+    stroke: var(--toolbar-color) !important;
   }
 
   tab[visuallyselected] > stack::before {
@@ -1700,6 +1709,7 @@
     */
     --tabs-navbar-shadow-size: -1px; /* Original: 1px */
     --tabs-navbar-original-shadow-size: 1px;
+    --tab-corner-rounding: 4px; /* Hardcorded */
 
     /* Size */
     -moz-box-align: stretch !important;
@@ -1826,9 +1836,10 @@
   .tab-icon-overlay:not([crashed]),
   .tab-icon-overlay[pinned][crashed][selected] {
     /* Position */
-    top: -3.5px !important;
+    top: 0 !important;
     inset-inline-end: -9px !important;
     z-index: 1 !important;
+    transform: translateX(-0.5px) translateY(-6px);
 
     /* Shape */
     padding: 1.5px !important;
@@ -1853,7 +1864,7 @@
 
   /* None exist favicon - Size bigger */
   .tabbrowser-tab:not([image]) .tab-icon-overlay:not([pinned], [sharing], [crashed]) {
-    top: 0 !important;
+    transform: translateX(-0.5px) translateY(-1px);
     inset-inline-end: 0 !important;
     margin-inline-end: 5.5px !important;
     padding: 0 !important;
@@ -1870,10 +1881,9 @@
 
   /* Busy - Overlay Position */
   .tabbrowser-tab:not([pinned])[busy] .tab-icon-overlay:is([soundplaying], [muted], [activemedia-blocked]) {
-    transform: translateX(-0.5px) translateY(-2.5px);
+    transform: translateX(-0.5px) translateY(-6px);
   }
   .tabbrowser-tab:not([image]) .tab-icon-overlay:not([pinned], [sharing], [crashed])[busy] {
-    top: -3.5px !important;
     inset-inline-end: -9px !important;
     margin-inline-end: 9.5px !important;
     padding: 1.5px !important;
@@ -1951,7 +1961,7 @@
     position: absolute !important;
 
     /* Shape */
-    border-bottom: 2px solid var(--identity-icon-color);
+    border-bottom: 2px solid color-mix(in srgb, var(--identity-icon-color) 75%, transparent);
     width: 25%;
 
     /* Animate */
@@ -1960,6 +1970,7 @@
   }
   .tabbrowser-tab[visuallyselected]:not([pinned]) .tab-content::before {
     width: calc(100% - 30px);
+    border-color: var(--identity-icon-color);
   }
   #tabbrowser-tabs[closebuttons="activetab"] .tabbrowser-tab[visuallyselected]:not([pinned]) .tab-content::before {
     width: calc(100% - 33px);
@@ -2919,7 +2930,8 @@
   }
 
   /*= new-tab-button-popup ===================================================*/
-  #new-tab-button-popup > menuitem[command="Browser:OpenAboutContainers"] {
+  #new-tab-button-popup > menuitem[command="Browser:OpenAboutContainers"],
+  .new-tab-popup > menuitem[command="Browser:OpenAboutContainers"] {
     --menuitem-image: url("chrome://global/skin/icons/settings.svg");
   }
 
@@ -3336,8 +3348,7 @@
     --menuitem-image: url("chrome://browser/skin/bookmark-star-on-tray.svg");
   }
 
-  menupopup[context="placesContext"] > .openintabs-menuitem,
-  menuitem.openintabs-menuitem.subviewbutton {
+  .openintabs-menuitem {
     --menuitem-image: url("./icons/movetowindow-16.svg");
   }
 
@@ -3754,7 +3765,8 @@
   #sync-reauthitem {
   }
 
-  #webDeveloperMenu {
+  #webDeveloperMenu, /* Legacy */
+  #browserToolsMenu {
     --menuitem-image: url("chrome://browser/skin/developer.svg");
   }
   #menu_pageInfo {
